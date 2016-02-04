@@ -1,0 +1,26 @@
+services:
+    ssp_software_api_token.api_key.extractor.header:
+        class: SSPSoftware\ApiTokenBundle\Service\KeyExtractor\HeaderKeyExtractor
+        arguments:
+            - "%ssp_software_api_token.api_key.parameter_name%"
+
+    ssp_software_api_token.api_key.extractor.query_string:
+        class: SSPSoftware\ApiTokenBundle\Service\KeyExtractor\QueryStringKeyExtractor
+        arguments:
+            - "%ssp_software_api_token.api_key.parameter_name%"
+
+    ssp_software_api_token.api_key.extractor.post_param:
+        class: SSPSoftware\ApiTokenBundle\Service\KeyExtractor\PostParamKeyExtractor
+        arguments:
+            - "%ssp_software_api_token.api_key.parameter_name%"
+
+    ssp_software_api_token.api_key.provider.api_key:
+        class: SSPSoftware\ApiTokenBundle\Security\Authentication\Provider\ApiKeyProvider
+        arguments: [""]
+
+    ssp_software_api_token.api_key.listener.api_key:
+        class: SSPSoftware\ApiTokenBundle\Security\Firewall\ApiKeyListener
+        arguments:
+            - "@security.token_storage"
+            - "@security.authentication.manager"
+            - "@ssp_software_api_token.api_key.extractor"

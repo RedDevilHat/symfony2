@@ -1,0 +1,31 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.service.user.provider:
+        class: AppBundle\Service\User\UserProvider
+        arguments:
+            - "@app.repository.api_token"
+            - "@app.repository.user"
+
+    app.repository.api_token:
+        class: AppBundle\Repository\ApiTokenRepository
+        factory: [ "@doctrine", "getRepository" ]
+        arguments: [ "AppBundle:ApiToken" ]
+
+    app.repository.user:
+        class: AppBundle\Repository\UserRepository
+        factory: [ "@doctrine", "getRepository" ]
+        arguments: [ "AppBundle:User" ]
+
+    api.service.authentication.authenticator:
+        class: ApiBundle\Service\Authentication\Authenticator
+        arguments:
+            - "@app.service.user.provider"
+            - "@app.repository.api_token"
+            - "@security.password_encoder"
